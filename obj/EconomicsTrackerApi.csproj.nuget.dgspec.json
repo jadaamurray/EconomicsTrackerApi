@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/jadamurray/Library/CloudStorage/OneDrive-UniversityofWestminster/WEB Coursework/EconomicsTrackerApi/EconomicsTrackerApi.csproj": {}
+    "/Users/jadamurray/Projects/WEB Coursework/EconomicsTrackerApi/EconomicsTrackerApi.csproj": {}
   },
   "projects": {
-    "/Users/jadamurray/Library/CloudStorage/OneDrive-UniversityofWestminster/WEB Coursework/EconomicsTrackerApi/EconomicsTrackerApi.csproj": {
+    "/Users/jadamurray/Projects/WEB Coursework/EconomicsTrackerApi/EconomicsTrackerApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/jadamurray/Library/CloudStorage/OneDrive-UniversityofWestminster/WEB Coursework/EconomicsTrackerApi/EconomicsTrackerApi.csproj",
+        "projectUniqueName": "/Users/jadamurray/Projects/WEB Coursework/EconomicsTrackerApi/EconomicsTrackerApi.csproj",
         "projectName": "EconomicsTrackerApi",
-        "projectPath": "/Users/jadamurray/Library/CloudStorage/OneDrive-UniversityofWestminster/WEB Coursework/EconomicsTrackerApi/EconomicsTrackerApi.csproj",
+        "projectPath": "/Users/jadamurray/Projects/WEB Coursework/EconomicsTrackerApi/EconomicsTrackerApi.csproj",
         "packagesPath": "/Users/jadamurray/.nuget/packages/",
-        "outputPath": "/Users/jadamurray/Library/CloudStorage/OneDrive-UniversityofWestminster/WEB Coursework/EconomicsTrackerApi/obj/",
+        "outputPath": "/Users/jadamurray/Projects/WEB Coursework/EconomicsTrackerApi/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/jadamurray/.nuget/NuGet/NuGet.Config"
