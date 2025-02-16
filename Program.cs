@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore; // ORM framework that allows us to use .NET objects in databases
 using EconomicsTrackerApi.Models;
+using EconomicsTrackerApi.Databse;
 
 var builder = WebApplication.CreateBuilder(args);
 
