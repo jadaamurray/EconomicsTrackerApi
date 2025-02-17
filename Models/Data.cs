@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization; //
 using System.Collections.Generic; // to access lists
 namespace EconomicsTrackerApi.Models; // stopping naming conflicts
 public class Data {
@@ -11,6 +12,7 @@ public class Data {
     public string RegionId {get; set;}
 
     // One-to-many relationship. We can easily access associated DataLog entries for admin purposes (e.g. history of who has accessed specific data points)
+    [JsonIgnore]
     public List<DataLog>? DataLogs { get; set; } // optional as nobody might have accessed this data entry
 
 }

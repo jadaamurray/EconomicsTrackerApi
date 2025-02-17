@@ -1,8 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using EconomicsTrackerApi.Models;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.General;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace EconomicsTrackerApi.Databse;
-public class EconomicsTrackerContext : DbContext // Inheriting from DbContext, a core class in Entity Framework Core
+public class EconomicsTrackerContext : IdentityDbContext<IdentityUser> // Inheriting from DbContext, a core class in Entity Framework Core
 {
     public EconomicsTrackerContext(DbContextOptions<EconomicsTrackerContext> options) : base(options) {} // Constructor
 
