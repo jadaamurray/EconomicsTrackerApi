@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore; // ORM framework that allows us to use .NET objects in databases
 using EconomicsTrackerApi.Models;
 using EconomicsTrackerApi.Databse;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,20 +10,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 // Adding Controllers to dependency injection container
 builder.Services.AddControllers();
-// Adding DBContext
+// Adding DBContext with SQlite database provider
 builder.Services.AddDbContext<EconomicsTrackerContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Adding Identity for use in user authentication and authorisation
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<EconomicsTrackerContext>().AddDefaultTokenProviders();
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddScoped<EmailService>();
 
 var app = builder.Build();
-
-/*using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<EconomicsTrackerContext>();
-    db.Database.Migrate();  // Ensures the latest migrations are applied
-    db.Database.EnsureCreated();
-    db.SaveChanges();
-}*/
-
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

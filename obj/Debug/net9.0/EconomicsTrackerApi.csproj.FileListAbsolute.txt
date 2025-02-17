@@ -577,3 +577,4 @@
 /Users/jadamurray/Projects/WEB Coursework/EconomicsTrackerApi/obj/Debug/net9.0/Economic.B3ABFC94.Up2Date
 /Users/jadamurray/Projects/WEB Coursework/EconomicsTrackerApi/obj/Debug/net9.0/EconomicsTrackerApi.genruntimeconfig.cache
 /Users/jadamurray/Projects/WEB Coursework/EconomicsTrackerApi/obj/Debug/net9.0/ref/EconomicsTrackerApi.dll
+/Users/jadamurray/Projects/WEB Coursework/EconomicsTrackerApi/bin/Debug/net9.0/Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
