@@ -22,15 +22,15 @@ jobs:
     - name: Log in to registry
       uses: docker/login-action@v2
       with:
-        registry: https://mcr.microsoft.com/
-        username: ${{ secrets.AzureAppService_ContainerUsername_66ce1007e7d046fe98b91b85070b31bc }}
-        password: ${{ secrets.AzureAppService_ContainerPassword_260113f08b97487189e4db2dacde4006 }}
+        registry: ${{ secrets.ACR_LOGIN_SERVER }}
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
 
     - name: Build and push container image to registry
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: mcr.microsoft.com/${{ secrets.AzureAppService_ContainerUsername_66ce1007e7d046fe98b91b85070b31bc }}/appsvc/staticsite:${{ github.sha }}
+        tags: ${{ secrets.ACR_LOGIN_SERVER }}/economic-tracker-api:${{ github.sha }}
         file: ./Dockerfile
 
   deploy:
@@ -47,5 +47,5 @@ jobs:
       with:
         app-name: 'economic-tracker-api'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_978ceef071c146c5aa417d1ef0ad3fb3 }}
-        images: 'mcr.microsoft.com/${{ secrets.AzureAppService_ContainerUsername_66ce1007e7d046fe98b91b85070b31bc }}/appsvc/staticsite:${{ github.sha }}'
+        publish-profile: ${{ secrets.AZURE_CREDENTIALS }}
+        images: '${{ secrets.ACR_LOGIN_SERVER }}/economic-tracker-api:${{ github.sha }}'

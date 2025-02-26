@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EconomicsTrackerApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3271f272516d24c967383c544c42e95bdceae911")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5993c478056e9828c4e0e97592c5ad0616845792")]
 [assembly: System.Reflection.AssemblyProductAttribute("EconomicsTrackerApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EconomicsTrackerApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
