@@ -8,7 +8,7 @@ RUN dotnet restore
 
 # Copy everything else and build the app
 COPY . ./
-RUN dotnet publish -c Release -o out
+RUN dotnet publish EconomicsTrackerApi.csproj -c Release -o out
 
 # Use the ASP.NET Core runtime image to run the app
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
