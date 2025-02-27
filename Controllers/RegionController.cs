@@ -32,7 +32,7 @@ namespace EconomicsTrackerApi.Controllers
 
         // GET: api/Region/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Region>> GetRegion(string id)
+        public async Task<ActionResult<Region>> GetRegion(int id)
         {
             var region = await _context.Regions.FindAsync(id);
 
@@ -48,7 +48,7 @@ namespace EconomicsTrackerApi.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRegion(string id, Region region)
+        public async Task<IActionResult> PutRegion(int id, Region region)
         {
             if (id != region.RegionId)
             {
@@ -103,7 +103,7 @@ namespace EconomicsTrackerApi.Controllers
 
         // DELETE: api/Region/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRegion(string id)
+        public async Task<IActionResult> DeleteRegion(int id)
         {
             var region = await _context.Regions.FindAsync(id);
             if (region == null)
@@ -117,7 +117,7 @@ namespace EconomicsTrackerApi.Controllers
             return NoContent();
         }
 
-        private bool RegionExists(string id)
+        private bool RegionExists(int id)
         {
             return _context.Regions.Any(e => e.RegionId == id);
         }

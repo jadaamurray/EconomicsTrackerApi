@@ -31,7 +31,7 @@ namespace EconomicsTrackerApi.Controllers
 
         // GET: api/Data/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Data>> GetData(string id)
+        public async Task<ActionResult<Data>> GetData(int id)
         {
             var data = await _context.Data.FindAsync(id);
 
@@ -47,7 +47,7 @@ namespace EconomicsTrackerApi.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutData(string id, Data data)
+        public async Task<IActionResult> PutData(int id, Data data)
         {
             if (id != data.DataId)
             {
@@ -102,7 +102,7 @@ namespace EconomicsTrackerApi.Controllers
 
         // DELETE: api/Data/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteData(string id)
+        public async Task<IActionResult> DeleteData(int id)
         {
             var data = await _context.Data.FindAsync(id);
             if (data == null)
@@ -116,7 +116,7 @@ namespace EconomicsTrackerApi.Controllers
             return NoContent();
         }
 
-        private bool DataExists(string id)
+        private bool DataExists(int id)
         {
             return _context.Data.Any(e => e.DataId == id);
         }

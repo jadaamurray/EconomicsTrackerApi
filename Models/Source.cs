@@ -1,8 +1,12 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace EconomicsTrackerApi.Models;
 public class Source {
-    public string SourceId {get; set;}
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // Auto-increment ID
+    public int SourceId {get; set;}
     public string Name {get; set;}
     public string Url {get; set;}
     public string? Description {get; set;} // nullable

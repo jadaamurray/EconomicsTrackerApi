@@ -15,7 +15,4 @@ public class EconomicsTrackerContext : IdentityDbContext<IdentityUser> // Inheri
     public DbSet<Indicator> Indicators {get; set;}
     public DbSet<Region> Regions {get; set;}
     public DbSet<Source> Sources {get; set;}
-
-    public DbSet<User> Users {get; set;}
-
 }

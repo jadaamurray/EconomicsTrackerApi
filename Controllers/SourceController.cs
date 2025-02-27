@@ -32,7 +32,7 @@ namespace EconomicsTrackerApi.Controllers
 
         // GET: api/Source/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Source>> GetSource(string id)
+        public async Task<ActionResult<Source>> GetSource(int id)
         {
             var source = await _context.Sources.FindAsync(id);
 
@@ -48,7 +48,7 @@ namespace EconomicsTrackerApi.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSource(string id, Source source)
+        public async Task<IActionResult> PutSource(int id, Source source)
         {
             if (id != source.SourceId)
             {
@@ -103,7 +103,7 @@ namespace EconomicsTrackerApi.Controllers
 
         // DELETE: api/Source/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteSource(string id)
+        public async Task<IActionResult> DeleteSource(int id)
         {
             var source = await _context.Sources.FindAsync(id);
             if (source == null)
@@ -117,7 +117,7 @@ namespace EconomicsTrackerApi.Controllers
             return NoContent();
         }
 
-        private bool SourceExists(string id)
+        private bool SourceExists(int id)
         {
             return _context.Sources.Any(e => e.SourceId == id);
         }

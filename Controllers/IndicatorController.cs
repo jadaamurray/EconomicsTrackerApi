@@ -32,7 +32,7 @@ namespace EconomicsTrackerApi.Controllers
 
         // GET: api/Indicator/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Indicator>> GetIndicator(string id)
+        public async Task<ActionResult<Indicator>> GetIndicator(int id)
         {
             var indicator = await _context.Indicators.FindAsync(id);
 
@@ -48,7 +48,7 @@ namespace EconomicsTrackerApi.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutIndicator(string id, Indicator indicator)
+        public async Task<IActionResult> PutIndicator(int id, Indicator indicator)
         {
             if (id != indicator.IndicatorId)
             {
@@ -103,7 +103,7 @@ namespace EconomicsTrackerApi.Controllers
 
         // DELETE: api/Indicator/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteIndicator(string id)
+        public async Task<IActionResult> DeleteIndicator(int id)
         {
             var indicator = await _context.Indicators.FindAsync(id);
             if (indicator == null)
@@ -117,7 +117,7 @@ namespace EconomicsTrackerApi.Controllers
             return NoContent();
         }
 
-        private bool IndicatorExists(string id)
+        private bool IndicatorExists(int id)
         {
             return _context.Indicators.Any(e => e.IndicatorId == id);
         }

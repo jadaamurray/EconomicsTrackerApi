@@ -48,7 +48,7 @@ namespace EconomicsTrackerApi.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutDataLog(string id, DataLog dataLog)
+        public async Task<IActionResult> PutDataLog(int id, DataLog dataLog)
         {
             if (id != dataLog.DataLogId)
             {
@@ -103,7 +103,7 @@ namespace EconomicsTrackerApi.Controllers
 
         // DELETE: api/DataLog/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteDataLog(string id)
+        public async Task<IActionResult> DeleteDataLog(int id)
         {
             var dataLog = await _context.DataLog.FindAsync(id);
             if (dataLog == null)
@@ -117,7 +117,7 @@ namespace EconomicsTrackerApi.Controllers
             return NoContent();
         }
 
-        private bool DataLogExists(string id)
+        private bool DataLogExists(int id)
         {
             return _context.DataLog.Any(e => e.DataLogId == id);
         }
