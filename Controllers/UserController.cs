@@ -7,12 +7,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using EconomicsTrackerApi.Models;
 using EconomicsTrackerApi.Databse;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace EconomicsTrackerApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
+
     public class UserController : ControllerBase
     {
         private readonly EconomicsTrackerContext _context;

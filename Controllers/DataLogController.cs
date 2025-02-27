@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using EconomicsTrackerApi.Models;
 using EconomicsTrackerApi.Databse;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace EconomicsTrackerApi.Controllers
@@ -45,6 +46,7 @@ namespace EconomicsTrackerApi.Controllers
 
         // PUT: api/DataLog/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutDataLog(string id, DataLog dataLog)
         {
