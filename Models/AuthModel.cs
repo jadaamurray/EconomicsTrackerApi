@@ -1,6 +1,8 @@
-namespace EconomicsTrackerApi.Models;
-public class AuthModel
+namespace EconomicsTrackerApi.Models
 {
-    public string Email {get; set;}
-    public string Password {get; set;}
+    public class AuthModel
+    {
+        public required string Email { get; set; }
+        public required string Password { get; set; }
+    }
 }

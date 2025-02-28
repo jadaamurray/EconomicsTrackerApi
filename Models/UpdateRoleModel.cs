@@ -1,6 +1,8 @@
-namespace EconomicsTrackerApi.Models;
- public class UpdateRoleModel
+namespace EconomicsTrackerApi.Models
+{
+    public class UpdateRoleModel
     {
-        public string RoleId { get; set; }
-        public string NewRoleName { get; set; }
+        public required string RoleId { get; set; }
+        public required string NewRoleName { get; set; }
     }
+}

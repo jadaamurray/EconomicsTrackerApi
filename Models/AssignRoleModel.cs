@@ -1,7 +1,8 @@
-namespace EconomicsTrackerApi.Models;
-
-public class AssignRoleModel
-    {   
-        public string UserId { get; set; }
-        public string RoleName { get; set; }
+namespace EconomicsTrackerApi.Models
+{
+    public class AssignRoleModel
+    {
+        public required string UserId { get; set; }
+        public required string RoleName { get; set; }
     }
+}
