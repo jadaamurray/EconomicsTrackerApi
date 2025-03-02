@@ -93,6 +93,8 @@ app.MapControllers(); // Adding Controllers
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseCors("AllowAllOrigins"); // Apply the CORS policy globally
+app.UseMiddleware<RateLimitingMiddleware>(10, TimeSpan.FromMinutes(1)); // 10 requests per minute
+
 
 app.Run();
 
