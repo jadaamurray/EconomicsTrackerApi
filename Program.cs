@@ -20,10 +20,12 @@ builder.Services.AddDbContext<EconomicsTrackerContext>(options =>
 // Adding Identity for use in user authentication and authorisation
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<EconomicsTrackerContext>().AddDefaultTokenProviders();
+// Adding email services
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddScoped<EmailService>();
+// Registering roles
 builder.Services.AddScoped<RolesController>();
-
+//Registering jwt
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -42,9 +44,20 @@ builder.Services.AddAuthentication(options =>
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
         };
     });
+// Registering interfaces
 builder.Services.AddScoped<IDataService, DataService>();
 builder.Services.AddScoped<IIndicatorService, IndicatorService>();
 builder.Services.AddScoped<IRegionService, RegionService>();
+// Add CORS services
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins", builder =>
+    {
+        builder.AllowAnyOrigin()     // Allow all origins
+               .AllowAnyMethod()     // Allow any HTTP method (GET, POST, etc.)
+               .AllowAnyHeader();    // Allow any header
+    });
+});
 
 
 var app = builder.Build();
@@ -79,6 +92,8 @@ app.MapGet("/weatherforecast", () =>
 app.MapControllers(); // Adding Controllers
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseCors("AllowAllOrigins"); // Apply the CORS policy globally
+
 app.Run();
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
