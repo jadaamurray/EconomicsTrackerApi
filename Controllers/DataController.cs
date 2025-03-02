@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using EconomicsTrackerApi.Models;
-using EconomicsTrackerApi.Databse;
+using EconomicsTrackerApi.Database;
 using Microsoft.AspNetCore.Authorization;
 
 namespace EconomicsTrackerApi.Controllers
@@ -15,110 +15,143 @@ namespace EconomicsTrackerApi.Controllers
     [ApiController]
     public class DataController : ControllerBase
     {
-        private readonly EconomicsTrackerContext _context;
+        private readonly IDataService _dataService;
+        private readonly ILogger<DataController> _logger;
 
-        public DataController(EconomicsTrackerContext context)
+        public DataController(IDataService dataService, ILogger<DataController> logger)
         {
-            _context = context;
+            _dataService = dataService;
+            _logger = logger;
         }
 
         // GET: api/Data
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Data>>> GetData()
         {
-            return await _context.Data.ToListAsync();
+            try
+            {
+                _logger.LogInformation("Fetching all data.");
+                var data = await _dataService.GetAllDataAsync();
+                if (data == null || !data.Any())
+                {
+                    _logger.LogWarning("No data found.");
+                    return NotFound("No data found.");
+                }
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while fetching economic data.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
 
         // GET: api/Data/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Data>> GetData(int id)
         {
-            var data = await _context.Data.FindAsync(id);
-
-            if (data == null)
+            try
             {
-                return NotFound();
-            }
+                _logger.LogInformation($"Fetching data point with ID {id}");
+                var data = await _dataService.GetDataByIdAsync(id);
 
-            return data;
+                if (data == null)
+                {
+                    _logger.LogWarning($"Data point with ID {id} not found.");
+                    return NotFound($"Data point with ID {id} not found.");
+                }
+
+                return Ok(data);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while fetching the data point.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
 
         // PUT: api/Data/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutData(int id, Data data)
         {
-            if (id != data.DataId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(data).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                if (id != data.DataId)
+                {
+                    _logger.LogWarning("Data point ID mismatch.");
+                    return BadRequest("Data point ID mismatch.");
+                }
+
+                await _dataService.UpdateDataAsync(id, data);
+                _logger.LogInformation($"Data point with ID {id} updated.");
+                return NoContent();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!DataExists(id))
+                if (await _dataService.GetDataByIdAsync(id) == null)
                 {
-                    return NotFound();
+                    _logger.LogWarning($"Data point with ID {id} not found for update.");
+                    return NotFound($"Data point with ID {id} not found.");
                 }
                 else
                 {
+                    _logger.LogError("Error updating data point.");
                     throw;
                 }
             }
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while updating the data point.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
 
         // POST: api/Data
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Data>> PostData(Data data)
         {
-            _context.Data.Add(data);
             try
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (DataExists(data.DataId))
+                if (data == null)
                 {
-                    return Conflict();
+                    _logger.LogWarning("Received empty data object.");
+                    return BadRequest("Data point cannot be null.");
                 }
-                else
-                {
-                    throw;
-                }
-            }
 
-            return CreatedAtAction("GetData", new { id = data.DataId }, data);
+                await _dataService.AddDataAsync(data);
+                _logger.LogInformation($"Data point with ID {data.DataId} created.");
+                return CreatedAtAction("GetDataPoint", new { id = data.DataId }, data);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while creating the data point.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
 
         // DELETE: api/Data/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteData(int id)
         {
-            var data = await _context.Data.FindAsync(id);
-            if (data == null)
+            try
             {
-                return NotFound();
+                var data = await _dataService.GetDataByIdAsync(id);
+                if (data == null)
+                {
+                    _logger.LogWarning($"Data point with ID {id} not found.");
+                    return NotFound($"Data point with ID {id} not found.");
+                }
+
+                await _dataService.DeleteDataAsync(id);
+                _logger.LogInformation($"Data point with ID {id} deleted.");
+                return NoContent();
             }
-
-            _context.Data.Remove(data);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool DataExists(int id)
-        {
-            return _context.Data.Any(e => e.DataId == id);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting the data point.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
     }
 }

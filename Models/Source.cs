@@ -16,6 +16,6 @@ namespace EconomicsTrackerApi.Models
         public string? Description { get; set; } // nullable
 
         [JsonIgnore]
-        public required List<Data> SourceDataPoints { get; set; } // not nullable as a source has to have at least one data point associated with it to be in the database
+        public List<Data>? SourceDataPoints { get; set; } // nullable as we need the source to exist in the database before is a data point is added
     }
 }

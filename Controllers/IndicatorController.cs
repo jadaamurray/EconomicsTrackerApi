@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using EconomicsTrackerApi.Models;
-using EconomicsTrackerApi.Databse;
+using EconomicsTrackerApi.Database;
 using Microsoft.AspNetCore.Authorization;
 
 
@@ -16,32 +16,58 @@ namespace EconomicsTrackerApi.Controllers
     [ApiController]
     public class IndicatorController : ControllerBase
     {
-        private readonly EconomicsTrackerContext _context;
+        private readonly IIndicatorService _indicatorService;
+        private readonly ILogger<IndicatorController> _logger;
 
-        public IndicatorController(EconomicsTrackerContext context)
+        public IndicatorController(IIndicatorService indicatorService, ILogger<IndicatorController> logger)
         {
-            _context = context;
+            _indicatorService = indicatorService;
+            _logger = logger;
         }
-
         // GET: api/Indicator
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Indicator>>> GetIndicators()
         {
-            return await _context.Indicators.ToListAsync();
+            try
+            {
+                _logger.LogInformation("Fetching all indicators.");
+                var indicators = await _indicatorService.GetAllIndicatorsAsync();
+                if (indicators == null || !indicators.Any())
+                {
+                    _logger.LogWarning("No indicators found.");
+                    return NotFound("No indicators found.");
+                }
+                return Ok(indicators);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while fetching indicators.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
 
         // GET: api/Indicator/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Indicator>> GetIndicator(int id)
         {
-            var indicator = await _context.Indicators.FindAsync(id);
-
-            if (indicator == null)
+            try
             {
-                return NotFound();
-            }
+                _logger.LogInformation($"Fetching indicator with ID {id}");
+                var indicator = await _indicatorService.GetIndicatorByIdAsync(id);
 
-            return indicator;
+                if (indicator == null)
+                {
+                    _logger.LogWarning($"Indicator with ID {id} not found.");
+                    return NotFound($"Indicator with ID {id} not found.");
+                }
+
+                return Ok(indicator);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while fetching the indicator.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
 
         // PUT: api/Indicator/5
@@ -50,76 +76,83 @@ namespace EconomicsTrackerApi.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutIndicator(int id, Indicator indicator)
         {
-            if (id != indicator.IndicatorId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(indicator).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                if (id != indicator.IndicatorId)
+                {
+                    _logger.LogWarning("Indicator ID mismatch.");
+                    return BadRequest("Indicator ID mismatch.");
+                }
+
+                await _indicatorService.UpdateIndicatorAsync(id, indicator);
+                _logger.LogInformation($"Indicator with ID {id} updated.");
+                return NoContent();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!IndicatorExists(id))
+                if (await _indicatorService.GetIndicatorByIdAsync(id) == null)
                 {
-                    return NotFound();
+                    _logger.LogWarning($"Indicator with ID {id} not found for update.");
+                    return NotFound($"Indicator with ID {id} not found.");
                 }
                 else
                 {
+                    _logger.LogError("Error updating indicator.");
                     throw;
                 }
             }
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while updating the indicator.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
 
         // POST: api/Indicator
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Indicator>> PostIndicator(Indicator indicator)
         {
-            _context.Indicators.Add(indicator);
             try
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (IndicatorExists(indicator.IndicatorId))
+                if (indicator == null)
                 {
-                    return Conflict();
+                    _logger.LogWarning("Received empty indicator object.");
+                    return BadRequest("Indicator data cannot be null.");
                 }
-                else
-                {
-                    throw;
-                }
-            }
 
-            return CreatedAtAction("GetIndicator", new { id = indicator.IndicatorId }, indicator);
+                await _indicatorService.AddIndicatorAsync(indicator);
+                _logger.LogInformation($"Indicator with ID {indicator.IndicatorId} created.");
+                return CreatedAtAction("GetIndicator", new { id = indicator.IndicatorId }, indicator);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while creating the indicator.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
 
         // DELETE: api/Indicator/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteIndicator(int id)
         {
-            var indicator = await _context.Indicators.FindAsync(id);
-            if (indicator == null)
+            try
             {
-                return NotFound();
+                var indicator = await _indicatorService.GetIndicatorByIdAsync(id);
+                if (indicator == null)
+                {
+                    _logger.LogWarning($"Indicator with ID {id} not found.");
+                    return NotFound($"Indicator with ID {id} not found.");
+                }
+
+                await _indicatorService.DeleteIndicatorAsync(id);
+                _logger.LogInformation($"Indicator with ID {id} deleted.");
+                return NoContent();
             }
-
-            _context.Indicators.Remove(indicator);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool IndicatorExists(int id)
-        {
-            return _context.Indicators.Any(e => e.IndicatorId == id);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while deleting the indicator.");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
+            }
         }
     }
 }

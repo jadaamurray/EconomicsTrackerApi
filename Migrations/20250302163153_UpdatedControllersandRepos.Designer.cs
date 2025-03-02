@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EconomicsTrackerApi.Migrations
 {
     [DbContext(typeof(EconomicsTrackerContext))]
-    [Migration("20250226184842_Roles")]
-    partial class Roles
+    [Migration("20250302163153_UpdatedControllersandRepos")]
+    partial class UpdatedControllersandRepos
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -22,23 +22,21 @@ namespace EconomicsTrackerApi.Migrations
 
             modelBuilder.Entity("EconomicsTrackerApi.Models.Data", b =>
                 {
-                    b.Property<string>("DataId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("DataId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("IndicatorId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("IndicatorId")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("RegionId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("RegionId")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("SourceId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("SourceId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<double>("Value")
                         .HasColumnType("REAL");
@@ -56,12 +54,12 @@ namespace EconomicsTrackerApi.Migrations
 
             modelBuilder.Entity("EconomicsTrackerApi.Models.DataLog", b =>
                 {
-                    b.Property<string>("DataLogId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("DataLogId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
-                    b.Property<string>("DataId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("DataId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("DateTimeAccessed")
                         .HasColumnType("TEXT");
@@ -74,24 +72,26 @@ namespace EconomicsTrackerApi.Migrations
 
                     b.HasIndex("DataId");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("DataLog");
                 });
 
             modelBuilder.Entity("EconomicsTrackerApi.Models.Indicator", b =>
                 {
-                    b.Property<string>("IndicatorId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("IndicatorId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Category")
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
+                        .HasMaxLength(450)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("IndicatorName")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Unit")
@@ -105,15 +105,18 @@ namespace EconomicsTrackerApi.Migrations
 
             modelBuilder.Entity("EconomicsTrackerApi.Models.Region", b =>
                 {
-                    b.Property<string>("RegionId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("RegionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
                         .IsRequired()
+                        .HasMaxLength(450)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("RegionName")
                         .IsRequired()
+                        .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
                     b.HasKey("RegionId");
@@ -123,14 +126,17 @@ namespace EconomicsTrackerApi.Migrations
 
             modelBuilder.Entity("EconomicsTrackerApi.Models.Source", b =>
                 {
-                    b.Property<string>("SourceId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("SourceId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
+                        .HasMaxLength(450)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(450)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Url")
@@ -140,24 +146,6 @@ namespace EconomicsTrackerApi.Migrations
                     b.HasKey("SourceId");
 
                     b.ToTable("Sources");
-                });
-
-            modelBuilder.Entity("EconomicsTrackerApi.Models.User", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("UserId");
-
-                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -381,15 +369,7 @@ namespace EconomicsTrackerApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EconomicsTrackerApi.Models.User", "User")
-                        .WithMany("DataLogs")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Data");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -461,11 +441,6 @@ namespace EconomicsTrackerApi.Migrations
             modelBuilder.Entity("EconomicsTrackerApi.Models.Source", b =>
                 {
                     b.Navigation("SourceDataPoints");
-                });
-
-            modelBuilder.Entity("EconomicsTrackerApi.Models.User", b =>
-                {
-                    b.Navigation("DataLogs");
                 });
 #pragma warning restore 612, 618
         }

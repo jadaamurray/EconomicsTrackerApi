@@ -1,7 +1,7 @@
 using EconomicsTrackerApi.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
-using EconomicsTrackerApi.Databse;
+using EconomicsTrackerApi.Database;
 
 public class RegionService : IRegionService
 {
@@ -12,7 +12,7 @@ public class RegionService : IRegionService
         _context = context;
     }
 
-    public async Task<IEnumerable<Region>> GetAllRegionAsync()
+    public async Task<IEnumerable<Region>> GetAllRegionsAsync()
     {
         return await _context.Regions.ToListAsync();
     }

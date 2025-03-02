@@ -1,7 +1,7 @@
 using EconomicsTrackerApi.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
-using EconomicsTrackerApi.Databse;
+using EconomicsTrackerApi.Database;
 
 public class DataService : IDataService
 {

@@ -1,7 +1,7 @@
 using EconomicsTrackerApi.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
-using EconomicsTrackerApi.Databse;
+using EconomicsTrackerApi.Database;
 
 public class IndicatorService : IIndicatorService
 {
@@ -12,7 +12,7 @@ public class IndicatorService : IIndicatorService
         _context = context;
     }
 
-    public async Task<IEnumerable<Indicator>> GetAllIndicatorAsync()
+    public async Task<IEnumerable<Indicator>> GetAllIndicatorsAsync()
     {
         return await _context.Indicators.ToListAsync();
     }
