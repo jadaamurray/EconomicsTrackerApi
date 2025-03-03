@@ -7,8 +7,6 @@ namespace EconomicsTrackerApi.Models
 {
     public class Indicator
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // Auto-increment ID
         public int IndicatorId { get; set; }
         [StringLength(100, MinimumLength = 2)]
         public required string IndicatorName { get; set; }

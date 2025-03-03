@@ -7,8 +7,6 @@ namespace EconomicsTrackerApi.Models
 {
     public class Region
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // Auto-increment ID
         public int RegionId { get; set; }
         [StringLength(200, MinimumLength = 3)]
         public required string RegionName { get; set; }

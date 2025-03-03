@@ -6,8 +6,6 @@ namespace EconomicsTrackerApi.Models
 {
     public class Source
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // Auto-increment ID
         public int SourceId { get; set; }
         [StringLength(450, MinimumLength = 3)]
         public required string Name { get; set; }
