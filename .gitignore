@@ -8,4 +8,5 @@ obj/
 
 # Ignore sensitive files
 appsettings.Development.json
+appsettings.json
 build_log.txt

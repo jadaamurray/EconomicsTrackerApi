@@ -30,27 +30,12 @@ EconomicsTrackerApi is a .NET Core Web API designed to track and manage economic
 - Azure account (if deploying to Azure)
 
 ### Installation
-1. Clone the repository:
-   
-   git clone https://github.com/jadaamurray/EconomicsTrackerApi.git
-   cd EconomicsTrackerApi
-
-
-2. Set up the database:
+1. Clone the repository
+2. Set up the database
    - Update the connection string in `appsettings.json` or use Azure App Configuration.
-   - Apply migrations:
-
-     dotnet ef database update
-
-3. Configure environment variables:
-
-   export ASPNETCORE_ENVIRONMENT=Development
-
-
+   - Apply migrations
+3. Configure environment variables
 4. Run the application:
-
-   dotnet run
-
 
 ### API Endpoints
 | Method | Endpoint | Description |
@@ -72,14 +57,11 @@ EconomicsTrackerApi is a .NET Core Web API designed to track and manage economic
 ### CORS Configuration
 - Configured in `Program.cs`:
 
-
 ### Deployment to Azure
 1. Set up an **Azure App Service**.
 2. Configure **app settings** in Azure.
 3. Use **GitHub Actions** for CI/CD.
-4. Deploy using:
-   git push azure main
-
+4. Deploy
 
 ## License
 This project is licensed under the MIT License.

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -47,7 +48,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddScoped<IDataService, DataService>();
 builder.Services.AddScoped<IIndicatorService, IndicatorService>();
 builder.Services.AddScoped<IRegionService, RegionService>();
-// Add CORS services
+// Adding CORS services
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllOrigins", builder =>
@@ -57,7 +58,6 @@ builder.Services.AddCors(options =>
                .AllowAnyHeader();    // Allow any header
     });
 });
-
 
 
 var app = builder.Build();
@@ -94,6 +94,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseCors("AllowAllOrigins"); // Apply the CORS policy globally
 app.UseMiddleware<RateLimitingMiddleware>(10, TimeSpan.FromMinutes(1)); // 10 requests per minute
+
 
 
 app.Run();
