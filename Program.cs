@@ -23,9 +23,8 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
 // Adding email services
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddScoped<EmailService>();
-// Registering roles
+// Registering JWT authentication
 builder.Services.AddScoped<RolesController>();
-//Registering jwt
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -54,10 +53,11 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAllOrigins", builder =>
     {
         builder.AllowAnyOrigin()     // Allow all origins
-               .AllowAnyMethod()     // Allow any HTTP method (GET, POST, etc.)
+               .AllowAnyMethod()     // Allow any HTTP method
                .AllowAnyHeader();    // Allow any header
     });
 });
+
 
 
 var app = builder.Build();
