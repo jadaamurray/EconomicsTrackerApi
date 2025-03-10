@@ -1,0 +1,31 @@
+/* Ensures the indicaotrs endpoint returns the list of indicators
+The test sends a GET request to the endpoint and checks if the response contains the expected data
+*/
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Xunit;
+
+public class IndicatorControllerTests : IClassFixture<WebApplicationFactory>
+{
+    private readonly HttpClient _client;
+
+    public IndicatorControllerTests(WebApplicationFactory factory)
+    {
+        _client = factory.CreateClient();
+    }
+
+    [Fact]
+    public async Task GetIndicators_ReturnsListOfIndicators()
+    {
+        // Act
+        var response = await _client.GetAsync("/api/indicator");
+
+        // Assert
+        response.EnsureSuccessStatusCode(); // Status Code 200-299
+        var content = await response.Content.ReadAsStringAsync();
+        Assert.Contains("Gross Domestic Product", content); // Verify the response contains expected data
+        Assert.Contains("Unemployment Rate", content);
+    }
+}

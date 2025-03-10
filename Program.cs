@@ -6,6 +6,9 @@ using EconomicsTrackerApi.Controllers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -58,6 +61,11 @@ builder.Services.AddCors(options =>
                .AllowAnyHeader();    // Allow any header
     });
 });
+// Adding Health Checks
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<EconomicsTrackerContext>() // Check if DB is reachable
+    .AddCheck("self", () => HealthCheckResult.Healthy()); // Check if the application itself is running and responsive
+    
 
 
 var app = builder.Build();
@@ -89,11 +97,13 @@ app.MapGet("/weatherforecast", () =>
 })
 .WithName("GetWeatherForecast");
 
-app.MapControllers(); // Adding Controllers
+app.MapControllers(); // Mapping Controllers
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseCors("AllowAllOrigins"); // Apply the CORS policy globally
 app.UseMiddleware<RateLimitingMiddleware>(10, TimeSpan.FromMinutes(1)); // 10 requests per minute
+app.MapHealthChecks("/health"); // Mapping health checks
+
 
 
 
