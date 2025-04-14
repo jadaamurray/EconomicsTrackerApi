@@ -91,7 +91,11 @@ namespace EconomicsTrackerApi.Controllers
                 var user = await _userManager.FindByEmailAsync(model.Email);
                 var roles = await _userManager.GetRolesAsync(user);
                 var token = GenerateJwtToken(user,roles);
-                return Ok(new { Token = token });
+                return Ok(new { 
+                    Token = token,
+                    UserId = user.Id,
+                    Email = user.Email,
+                    Roles = roles });
             }
 
             return Unauthorized("Invalid login attempt.");

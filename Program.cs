@@ -54,9 +54,9 @@ builder.Services.AddScoped<IRegionService, RegionService>();
 // Adding CORS services
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAllOrigins", builder =>
+    options.AddPolicy("AllowReactApp", builder =>
     {
-        builder.AllowAnyOrigin()     // Allow all origins
+        builder.WithOrigins("http://localhost:5173")     // Allow all origins
                .AllowAnyMethod()     // Allow any HTTP method
                .AllowAnyHeader();    // Allow any header
     });
@@ -100,7 +100,7 @@ app.MapGet("/weatherforecast", () =>
 app.MapControllers(); // Mapping Controllers
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors("AllowAllOrigins"); // Apply the CORS policy globally
+app.UseCors("AllowReactApp"); // Apply the CORS policy globally
 app.UseMiddleware<RateLimitingMiddleware>(10, TimeSpan.FromMinutes(1)); // 10 requests per minute
 app.MapHealthChecks("/health"); // Mapping health checks
 
