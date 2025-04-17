@@ -1,5 +1,6 @@
 using Azure.Core;
 using EconomicsTrackerApi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -50,7 +51,7 @@ namespace EconomicsTrackerApi.Controllers
                 var emailSubject = "Email Verification";
                 var emailBody = $"Please verify your email by clicking the following link: {verificationLink}";
                 _emailService.SendEmail(user.Email, emailSubject, emailBody);
-               
+
                 return Ok("User registered successfully. An email verification link has been sent.");
             }
 
@@ -79,7 +80,20 @@ namespace EconomicsTrackerApi.Controllers
             return BadRequest("Email verification failed.");
         }
 
+        [HttpGet("verify")]
+        [Authorize] // Automatically validate the JWT cookie
+        public IActionResult VerifyAuth()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = _userManager.FindByIdAsync(userId).Result;
 
+            return Ok(new
+            {
+                UserId = userId,
+                Email = user.Email,
+                Roles = _userManager.GetRolesAsync(user).Result
+            });
+        }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(AuthModel model)
@@ -90,12 +104,22 @@ namespace EconomicsTrackerApi.Controllers
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
                 var roles = await _userManager.GetRolesAsync(user);
-                var token = GenerateJwtToken(user,roles);
-                return Ok(new { 
-                    Token = token,
+                var token = GenerateJwtToken(user, roles);
+                // Set HTTP-only cookie
+                Response.Cookies.Append("jwt", token, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true, // Enable in production (requires HTTPS)
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTime.UtcNow.AddHours(3)
+                });
+                return Ok(new
+                {
+                    //Token = token,
                     UserId = user.Id,
                     Email = user.Email,
-                    Roles = roles });
+                    Roles = roles
+                });
             }
 
             return Unauthorized("Invalid login attempt.");
@@ -104,7 +128,8 @@ namespace EconomicsTrackerApi.Controllers
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {
-            await _signInManager.SignOutAsync();
+            //await _signInManager.SignOutAsync();
+            Response.Cookies.Delete("jwt");
             return Ok("Logged out");
         }
         private string GenerateJwtToken(IdentityUser user, IList<string> roles)

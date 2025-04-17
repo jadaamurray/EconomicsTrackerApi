@@ -58,8 +58,16 @@ builder.Services.AddCors(options =>
     {
         builder.WithOrigins("http://localhost:5173")     // Allow all origins
                .AllowAnyMethod()     // Allow any HTTP method
-               .AllowAnyHeader();    // Allow any header
+               .AllowAnyHeader()    // Allow any header
+               .AllowCredentials(); // For cookies
     });
+});
+// Configure authentication
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // In production
+    options.Cookie.SameSite = SameSiteMode.Strict;
 });
 // Adding Health Checks
 builder.Services.AddHealthChecks()
