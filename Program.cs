@@ -22,7 +22,7 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<EconomicsTrackerContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 // Adding Identity for use in user authentication and authorisation
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<EconomicsTrackerContext>().AddDefaultTokenProviders();
 // Adding email services
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
