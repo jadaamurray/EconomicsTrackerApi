@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace EconomicsTrackerApi.Database;
-public class EconomicsTrackerContext : IdentityDbContext<IdentityUser> // Inheriting from DbContext, a core class in Entity Framework Core
+public class EconomicsTrackerContext : IdentityDbContext<ApplicationUser> // Inheriting from DbContext, a core class in Entity Framework Core
 {
     public EconomicsTrackerContext(DbContextOptions<EconomicsTrackerContext> options) : base(options) {} // Constructor
 
@@ -15,4 +15,7 @@ public class EconomicsTrackerContext : IdentityDbContext<IdentityUser> // Inheri
     public DbSet<Indicator> Indicators {get; set;}
     public DbSet<Region> Regions {get; set;}
     public DbSet<Source> Sources {get; set;}
+
+    // add DbSet for favourites later
+    // public DbSet<Favorite> Favorites { get; set; }
 }

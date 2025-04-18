@@ -1,4 +1,5 @@
 using Azure.Core;
+using EconomicsTrackerApi.DTOs;
 using EconomicsTrackerApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -19,12 +20,12 @@ namespace EconomicsTrackerApi.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly EmailService _emailService;
         private readonly IConfiguration _configuration;
 
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, EmailService emailService, IConfiguration configuration)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, EmailService emailService, IConfiguration configuration)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -33,10 +34,17 @@ namespace EconomicsTrackerApi.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(AuthModel model)
+        public async Task<IActionResult> Register(RegisterDTO dto)
         {
-            var user = new IdentityUser { UserName = model.Email, Email = model.Email };
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var user = new ApplicationUser
+            {
+                UserName = dto.Email,
+                Email = dto.Email,
+                FirstName = dto.FirstName,
+                LastName = dto.LastName
+            }; 
+            
+            var result = await _userManager.CreateAsync(user, dto.Password);
 
             if (result.Succeeded)
             {
@@ -50,7 +58,7 @@ namespace EconomicsTrackerApi.Controllers
                 var emailSubject = "Email Verification";
                 var emailBody = $"Please verify your email by clicking the following link: {verificationLink}";
                 _emailService.SendEmail(user.Email, emailSubject, emailBody);
-               
+
                 return Ok("User registered successfully. An email verification link has been sent.");
             }
 
@@ -82,20 +90,24 @@ namespace EconomicsTrackerApi.Controllers
 
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(AuthModel model)
+        public async Task<IActionResult> Login(LoginDTO dto)
         {
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: false, lockoutOnFailure: false);
+            var result = await _signInManager.PasswordSignInAsync(dto.Email, dto.Password, isPersistent: false, lockoutOnFailure: false);
 
             if (result.Succeeded)
             {
-                var user = await _userManager.FindByEmailAsync(model.Email);
+                var user = await _userManager.FindByEmailAsync(dto.Email);
                 var roles = await _userManager.GetRolesAsync(user);
-                var token = GenerateJwtToken(user,roles);
-                return Ok(new { 
+                var token = GenerateJwtToken(user, roles);
+                return Ok(new
+                {
                     Token = token,
                     UserId = user.Id,
                     Email = user.Email,
-                    Roles = roles });
+                    Roles = roles,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName
+                });
             }
 
             return Unauthorized("Invalid login attempt.");
@@ -107,7 +119,7 @@ namespace EconomicsTrackerApi.Controllers
             await _signInManager.SignOutAsync();
             return Ok("Logged out");
         }
-        private string GenerateJwtToken(IdentityUser user, IList<string> roles)
+        private string GenerateJwtToken(ApplicationUser user, IList<string> roles)
         {
             var claims = new List<Claim>
             {
