@@ -48,7 +48,7 @@ namespace EconomicsTrackerApi.Controllers
 
         // GET: api/Data/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Data>> GetData(int id)
+        public async Task<ActionResult<Data>> GetDataPoint(int id)
         {
             try
             {
