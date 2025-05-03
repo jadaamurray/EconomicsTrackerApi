@@ -122,7 +122,7 @@ namespace EconomicsTrackerApi.Controllers
 
                 await _regionService.AddRegionAsync(region);
                 _logger.LogInformation($"Region with ID {region.RegionId} created.");
-                return CreatedAtAction("Region", new { id = region.RegionId }, region);
+                return CreatedAtAction("GetRegion", new { id = region.RegionId }, region);
             }
             catch (Exception ex)
             {
