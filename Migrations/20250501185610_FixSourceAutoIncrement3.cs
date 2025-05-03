@@ -11,7 +11,7 @@ namespace EconomicsTrackerApi.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
 
-            // Drop existing primary key constraint
+            // Drop primary key constraint
             migrationBuilder.DropPrimaryKey(
                 name: "PK_Sources",
                 table: "Sources");

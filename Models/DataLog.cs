@@ -7,6 +7,8 @@ namespace EconomicsTrackerApi.Models
 {
     public class DataLog
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // auto generate and increment id
         public int DataLogId { get; set; }
         public DateTime DateTimeAccessed { get; set; }
         // foreign keys from EconomicData and User tables

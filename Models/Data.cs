@@ -7,6 +7,8 @@ namespace EconomicsTrackerApi.Models
 {
     public class Data
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // auto generate and increment id
         public int DataId { get; set; }
         public DateTime DateTime { get; set; }
         public double Value { get; set; }
