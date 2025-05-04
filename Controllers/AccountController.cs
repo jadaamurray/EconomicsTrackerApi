@@ -14,6 +14,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+
 namespace EconomicsTrackerApi.Controllers
 {
     [Route("api/[controller]")]
@@ -42,8 +44,8 @@ namespace EconomicsTrackerApi.Controllers
                 Email = dto.Email,
                 FirstName = dto.FirstName,
                 LastName = dto.LastName
-            }; 
-            
+            };
+
             var result = await _userManager.CreateAsync(user, dto.Password);
 
             if (result.Succeeded)
@@ -118,6 +120,30 @@ namespace EconomicsTrackerApi.Controllers
         {
             await _signInManager.SignOutAsync();
             return Ok("Logged out");
+        }
+// not sure if me is working
+        [Authorize]
+        [HttpGet("me")]
+        public async Task<IActionResult> GetCurrentUser()
+        {
+            // Get user ID from JWT
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            // Get user from DB
+            var user = await _userManager.FindByIdAsync(userId);
+            var roles = await _userManager.GetRolesAsync(user);
+
+            if (user == null)
+                return NotFound();
+
+            // Return minimal safe data (avoid sensitive fields)
+            return Ok(new
+            {
+                user.Id,
+                user.Email,
+                user.FullName,
+                roles
+            });
         }
         private string GenerateJwtToken(ApplicationUser user, IList<string> roles)
         {
